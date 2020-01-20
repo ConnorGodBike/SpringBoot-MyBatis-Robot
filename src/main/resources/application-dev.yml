@@ -1,0 +1,85 @@
+# Tomcat
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+  port: 9010
+  servlet:
+    context-path: /
+
+# 文件上传存储路径
+webUploadPath: E:/project files/
+
+systemconfig:
+  payAsynNotifyHost: http://localhost:8088/api/pay/asynNotify/
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    druid:
+      url: jdbc:mysql://ip:3306/springboot-robot?allowMultiQueries=true&autoReconnect=true&useSSL=false&characterEncoding=utf-8
+      username: root
+      password: root@123..++
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        #login-username: admin
+        #login-password: admin
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${webUploadPath}
+
+  # rabbitmq
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: root
+    password: root
+    publisher-confirms: true
+    publisher-returns: true
+    virtual-host: /
+    listener:
+      simple:
+        #          并发消费者最大值
+        max-concurrency: 20
+        #          并发消费者初始值
+        concurrency: 10
+        #          消费者每次消费可拉取的最大消息数
+        prefetch: 5
+        #         消费者主动删除消息
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+          max-attempts: 3
+xxl:
+  job:
+    admin:
+      addresses: http://www.springboot-robot.com/job
+    executor:
+      appname: springboot-robot
+      ip:
+      port: 9014
+      logpath: /home/xxl-job/jobhandler
+      logretentiondays: 10
+    accessToken:
